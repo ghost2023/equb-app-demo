@@ -3,6 +3,7 @@ import Colors from "@/constants/Colors";
 import { spacing } from "@/constants/Spacing";
 import { Feather, MaterialIcons } from "@expo/vector-icons";
 import { Image } from "expo-image";
+import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { useState } from "react";
 import { ScrollView, TouchableOpacity, View } from "react-native";
@@ -50,10 +51,21 @@ export default function TabOneScreen() {
     <View style={{ flex: 1, backgroundColor: color.background }}>
       <ScrollView
         contentContainerStyle={{
-          backgroundColor: color.primary,
           position: "relative",
         }}
       >
+        <LinearGradient
+          colors={["#5f62Fe", "#2f42ee"]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 0.75, y: 1 }}
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            height: 240,
+          }}
+        />
         <View
           style={{
             top: 0,
