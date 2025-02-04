@@ -67,9 +67,10 @@ export function Text({ style, ...props }: TextProps) {
       style.fontWeight
     ) {
       const isItalic = style.fontStyle === "italic";
+      // @ts-ignore
       if (isItalic) font = italics[style.fontWeight.toString()];
+      // @ts-ignore
       else font = fonts[style.fontWeight.toString()];
-      console.log(font);
     }
   }
 
