@@ -1,15 +1,11 @@
+import { Text } from "@/components/ui/Text";
 import Colors from "@/constants/Colors";
 import { spacing } from "@/constants/Spacing";
-import {
-  Entypo,
-  Feather,
-  FontAwesome5,
-  Ionicons,
-  MaterialIcons,
-} from "@expo/vector-icons";
+import { Feather, MaterialIcons } from "@expo/vector-icons";
 import { Image } from "expo-image";
+import { router } from "expo-router";
 import { useState } from "react";
-import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { ScrollView, TouchableOpacity, View } from "react-native";
 
 const upcomingPayments = [
   { amount: 100, dueDate: "Nov 2", equbName: "dolor sit amet" },
@@ -53,7 +49,6 @@ export default function TabOneScreen() {
   return (
     <View style={{ flex: 1, backgroundColor: color.background }}>
       <ScrollView
-        stickyHeaderIndices={[0]}
         contentContainerStyle={{
           backgroundColor: color.primary,
           position: "relative",
@@ -64,9 +59,7 @@ export default function TabOneScreen() {
             top: 0,
             left: 0,
             right: 0,
-            paddingHorizontal: spacing.sm,
-            paddingVertical: spacing.xs,
-            backgroundColor: color.primary,
+            padding: spacing.sm,
           }}
         >
           <View
@@ -106,7 +99,7 @@ export default function TabOneScreen() {
         </View>
         <View
           style={{
-            height: 160,
+            height: 150,
           }}
         >
           <View
@@ -120,7 +113,6 @@ export default function TabOneScreen() {
                 color: color.primaryText,
                 fontSize: 14,
                 opacity: 80,
-                fontWeight: "500",
               }}
             >
               Saved
@@ -128,8 +120,8 @@ export default function TabOneScreen() {
             <Text
               style={{
                 color: color.primaryText,
-                fontSize: 40,
-                fontWeight: "bold",
+                fontSize: 36,
+                fontWeight: "semibold",
               }}
             >
               {showAmount ? (
@@ -137,7 +129,7 @@ export default function TabOneScreen() {
               ) : (
                 <Text style={{ verticalAlign: "middle" }}>******</Text>
               )}{" "}
-              <Text style={{ fontSize: 18 }}>ETB</Text>
+              <Text style={{ fontSize: 16 }}>ETB</Text>
             </Text>
             <View
               style={{
@@ -156,8 +148,8 @@ export default function TabOneScreen() {
               <View style={{ alignItems: "center" }}>
                 <Text
                   style={{
-                    fontSize: 24,
-                    fontWeight: "bold",
+                    fontSize: 16,
+                    fontWeight: 600,
                     color: color.primaryText,
                   }}
                 >
@@ -167,7 +159,6 @@ export default function TabOneScreen() {
                   style={{
                     fontSize: 14,
                     color: "#FFFFFFB0",
-                    fontWeight: 600,
                   }}
                 >
                   Completed
@@ -176,8 +167,8 @@ export default function TabOneScreen() {
               <View style={{ alignItems: "center" }}>
                 <Text
                   style={{
-                    fontSize: 24,
-                    fontWeight: "bold",
+                    fontSize: 16,
+                    fontWeight: 600,
                     color: color.primaryText,
                   }}
                 >
@@ -187,7 +178,6 @@ export default function TabOneScreen() {
                   style={{
                     fontSize: 14,
                     color: "#FFFFFFB0",
-                    fontWeight: 600,
                   }}
                 >
                   Running
@@ -196,8 +186,8 @@ export default function TabOneScreen() {
               <View style={{ alignItems: "center" }}>
                 <Text
                   style={{
-                    fontSize: 24,
-                    fontWeight: "bold",
+                    fontSize: 16,
+                    fontWeight: 600,
                     color: color.primaryText,
                   }}
                 >
@@ -207,7 +197,6 @@ export default function TabOneScreen() {
                   style={{
                     fontSize: 14,
                     color: "#FFFFFFB0",
-                    fontWeight: 600,
                   }}
                 >
                   Upcoming
@@ -218,7 +207,7 @@ export default function TabOneScreen() {
         </View>
         <View
           style={{
-            backgroundColor: color.background,
+            backgroundColor: "#F3F4F6",
             borderTopRightRadius: 20,
             borderTopLeftRadius: 20,
             padding: spacing.sm,
@@ -227,13 +216,13 @@ export default function TabOneScreen() {
           <Text
             style={{
               color: color.text,
-              fontWeight: 600,
+              fontWeight: 500,
               marginBottom: 10,
             }}
           >
             Upcoming Payments
           </Text>
-          <View style={{ gap: 8 }}>
+          <View style={{ gap: 12 }}>
             {upcomingPayments.map((payment, index) => (
               <UpcomingPayment
                 equbName={payment.equbName}
@@ -247,14 +236,14 @@ export default function TabOneScreen() {
           <Text
             style={{
               color: color.text,
-              fontWeight: 600,
+              fontWeight: 500,
               marginBottom: 10,
               marginTop: 20,
             }}
           >
             Running Equb
           </Text>
-          <View style={{ gap: 8 }}>
+          <View style={{ gap: 12 }}>
             {currentEqub.map((equb, index) => (
               <EqubCard key={index} {...equb} />
             ))}
@@ -284,27 +273,27 @@ const EqubCard = ({
 }) => {
   const color = Colors.light;
   return (
-    <View
+    <TouchableOpacity
+      onPress={() => router.push(`/equb/${1}`)}
       style={{
         backgroundColor: "white",
-        padding: 10,
+        padding: 12,
         borderRadius: 8,
-        borderWidth: 1,
-        borderColor: color.border,
+        elevation: 2,
       }}
     >
       <View
         style={{
-          gap: 6,
+          gap: 12,
           flexDirection: "row",
         }}
       >
         <Image
           source={image}
-          style={{ width: 40, height: 40, borderRadius: 20 }}
+          style={{ width: 48, height: 48, borderRadius: 6 }}
         />
         <View>
-          <Text style={{ color: color.text, fontSize: 18, fontWeight: "bold" }}>
+          <Text style={{ color: color.text, fontSize: 16, fontWeight: 500 }}>
             {name}
           </Text>
 
@@ -318,7 +307,6 @@ const EqubCard = ({
             <Text
               style={{
                 color: color.secondaryText,
-                fontWeight: 500,
                 fontSize: 14,
                 flexShrink: 0,
               }}
@@ -327,7 +315,7 @@ const EqubCard = ({
                 style={{
                   color: color.text,
 
-                  fontWeight: 600,
+                  fontWeight: 500,
                 }}
               >
                 {currentCycle}
@@ -388,7 +376,7 @@ const EqubCard = ({
           </Text>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -406,10 +394,9 @@ const UpcomingPayment = ({
     <View
       style={{
         backgroundColor: "white",
-        padding: 10,
+        padding: 12,
         borderRadius: 8,
-        borderWidth: 1,
-        borderColor: color.border,
+        elevation: 2,
       }}
     >
       <View
@@ -428,7 +415,7 @@ const UpcomingPayment = ({
           {dueDate}
         </Text>
       </View>
-      <Text style={{ color: color.text, fontSize: 20, fontWeight: "bold" }}>
+      <Text style={{ color: color.text, fontSize: 16, fontWeight: "bold" }}>
         {amount} ETB
       </Text>
     </View>

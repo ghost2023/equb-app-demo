@@ -7,7 +7,7 @@ export default {
     primary: "#2f52ee",
     // primary: "#3A31DA",
     primaryText: "#fff",
-    secondary: "#2F95DC",
+    secondary: "#f3f4f6",
     secondaryText: "#565656",
     muted: "#E0E0E0",
     mutedText: "#000",
