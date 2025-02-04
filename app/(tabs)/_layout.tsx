@@ -3,7 +3,8 @@ import { Tabs } from "expo-router";
 
 import Colors from "@/constants/Colors";
 import { useClientOnlyValue } from "@/components/useClientOnlyValue";
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, Feather } from "@expo/vector-icons";
+import { Text } from "@/components/ui/Text";
 
 export default function TabLayout() {
   return (
@@ -13,6 +14,10 @@ export default function TabLayout() {
         // Disable the static render of the header on web
         // to prevent a hydration error in React Navigation v6.
         headerShown: useClientOnlyValue(false, true),
+        tabBarLabelStyle: {
+          fontSize: 14,
+          fontFamily: "medium",
+        },
       }}
     >
       <Tabs.Screen
@@ -21,7 +26,18 @@ export default function TabLayout() {
           title: "Home",
           headerShown: false,
           tabBarIcon: ({ color }) => (
-            <AntDesign name="home" size={24} color={color} />
+            <Feather name="home" size={20} color={color} />
+          ),
+        }}
+      />
+
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: "Profile",
+          headerShown: false,
+          tabBarIcon: ({ color }) => (
+            <Feather name="user" size={20} color={color} />
           ),
         }}
       />

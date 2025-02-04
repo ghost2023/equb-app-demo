@@ -88,10 +88,13 @@ export default function TabOneScreen() {
                 Hello, <Text style={{ fontWeight: 600 }}>John</Text>
               </Text>
             </View>
-            <TouchableOpacity onPress={() => setShowAmount(!showAmount)}>
+            <TouchableOpacity
+              style={{ alignSelf: "flex-start" }}
+              onPress={() => setShowAmount(!showAmount)}
+            >
               <Feather
                 name={showAmount ? "eye-off" : "eye"}
-                size={24}
+                size={20}
                 color={color.primaryText}
               />
             </TouchableOpacity>
