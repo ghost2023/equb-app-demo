@@ -1,17 +1,17 @@
 import React, { ReactNode } from "react";
-import { AuthProvider } from "./AuthProvider";
 import PortalProviders from "./PortalProvider";
-import { TRPCProvider } from "./TrpcProvider";
+import { ReactQueryProvider } from "./ReactQueryProvider";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 type Props = {
   children: ReactNode | ReactNode[];
 };
 export const Providers = ({ children }: Props) => {
   return (
-    <TRPCProvider>
-      <AuthProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <ReactQueryProvider>
         <PortalProviders>{children}</PortalProviders>
-      </AuthProvider>
-    </TRPCProvider>
+      </ReactQueryProvider>
+    </GestureHandlerRootView>
   );
 };
