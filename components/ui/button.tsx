@@ -5,7 +5,8 @@ import {
   PressableProps,
   TextStyle,
 } from "react-native";
-import { Text } from "./text";
+import { Text } from "./Text";
+import Colors from "@/constants/Colors";
 
 export type BtnProps = {
   label: string;
@@ -30,10 +31,10 @@ export const Btn = ({
     paddingHorizontal: 16,
     paddingVertical: 4,
     minWidth: 140,
-    backgroundColor: "#FF6B00",
+    backgroundColor: Colors.light.primary,
     borderWidth: 0,
-    borderRadius: 10,
-    height: 48,
+    borderRadius: 6,
+    height: 40,
     opacity: disabled || isLoading ? 0.75 : 1,
   };
 
@@ -43,9 +44,9 @@ export const Btn = ({
       style={(res) =>
         typeof style == "function"
           ? // @ts-ignore
-          { ...defaultStyles, ...style(res) }
+            { ...defaultStyles, ...style(res) }
           : // @ts-ignore
-          { ...defaultStyles, ...style }
+            { ...defaultStyles, ...style }
       }
       {...props}
     >
@@ -54,7 +55,7 @@ export const Btn = ({
       ) : (
         <Text
           style={{
-            fontWeight: 700,
+            fontWeight: 500,
             textTransform: "uppercase",
             color: "white",
             ...labelStyle,

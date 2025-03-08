@@ -1,6 +1,5 @@
 import * as React from "react";
 import {
-  Platform,
   Pressable,
   StyleProp,
   Text,
@@ -10,10 +9,11 @@ import {
   ViewStyle,
 } from "react-native";
 
-import { COLORS } from "@/lib/constants";
+import COLORS from "@/constants/Colors";
 import { Feather } from "@expo/vector-icons";
 import { View } from "react-native";
 import Animated, { FadeInUp, FadeOutUp } from "react-native-reanimated";
+import Colors from "@/constants/Colors";
 
 type Props = {
   label?: string;
@@ -45,7 +45,17 @@ const Input = React.forwardRef<TextInput, TextInputProps & Props>(
     return (
       <View style={[containerStyle]}>
         {label && (
-          <Text style={[{ fontFamily: "Poppins-Medium" }, labelStyle]}>
+          <Text
+            style={[
+              {
+                fontSize: 14,
+                marginBottom: 2,
+                color: Colors.light.secondaryText,
+                fontFamily: "medium",
+              },
+              labelStyle,
+            ]}
+          >
             {label}
           </Text>
         )}
@@ -56,19 +66,19 @@ const Input = React.forwardRef<TextInput, TextInputProps & Props>(
             placeholderTextColor={"#525252"}
             style={[
               {
-                minHeight: 48,
+                minHeight: 40,
                 fontFamily: "Poppins-Regular",
                 borderWidth: 1,
-                borderRadius: 10,
+                borderRadius: 6,
                 justifyContent: "center",
                 textAlignVertical: "center",
                 backgroundColor: isFocused ? "transparent" : "#EEEEEE",
                 borderColor: error
                   ? "#feb2b2"
                   : isFocused
-                    ? COLORS.primary
+                    ? COLORS.light.primary
                     : "#E5E7EB",
-                paddingHorizontal: 14,
+                paddingHorizontal: 12,
                 fontSize: 14,
               },
               style,
