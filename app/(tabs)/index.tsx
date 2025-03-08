@@ -1,12 +1,19 @@
 import { Text } from "@/components/ui/Text";
 import Colors from "@/constants/Colors";
 import { spacing } from "@/constants/Spacing";
-import { Feather, MaterialIcons } from "@expo/vector-icons";
+import {
+  Feather,
+  MaterialCommunityIcons,
+  MaterialIcons,
+} from "@expo/vector-icons";
 import { Image } from "expo-image";
-import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
-import { useState } from "react";
-import { ScrollView, TouchableOpacity, View } from "react-native";
+import {
+  ScrollView,
+  TouchableOpacity,
+  View,
+  useWindowDimensions,
+} from "react-native";
 
 const upcomingPayments = [
   { amount: 100, dueDate: "Nov 2", equbName: "dolor sit amet" },
@@ -16,37 +23,38 @@ const upcomingPayments = [
 
 const currentEqub = [
   {
-    name: "Monthly Savings Group",
-    amountPerCycle: 100,
-    members: 12,
-    currentCycle: 3,
-    totalCycle: 10,
-    cycleEndDate: "Nov 2",
-    image: "https://picsum.photos/100",
+    id: 1,
+    totalAmount: 100000,
+    depositedAmount: 200,
+    depositCycleDuration: 2,
+    depositCycleUnit: "Days",
+    withdrawCycleDuration: 2,
+    withdrawCycleUnit: "Weeks",
   },
   {
-    name: "Holiday Fund",
-    amountPerCycle: 300,
-    members: 8,
-    totalCycle: 13,
-    currentCycle: 5,
-    cycleEndDate: "Dec 15",
-    image: "https://picsum.photos/100/100",
+    id: 2,
+    totalAmount: 100000,
+    depositedAmount: 200,
+    depositCycleDuration: 2,
+    depositCycleUnit: "Days",
+    withdrawCycleDuration: 2,
+    withdrawCycleUnit: "Weeks",
   },
   {
-    name: "Wedding Contribution",
-    amountPerCycle: 200,
-    members: 10,
-    currentCycle: 2,
-    totalCycle: 6,
-    cycleEndDate: "Jan 2",
-    image: "https://picsum.photos/140/100",
+    id: 3,
+    totalAmount: 100000,
+    depositedAmount: 200,
+    depositCycleDuration: 2,
+    depositCycleUnit: "Days",
+    withdrawCycleDuration: 2,
+    withdrawCycleUnit: "Weeks",
   },
 ];
 
 export default function TabOneScreen() {
   const color = Colors["light"];
-  const [showAmount, setShowAmount] = useState(false);
+  const width = useWindowDimensions().width;
+
   return (
     <View style={{ flex: 1, backgroundColor: color.background }}>
       <ScrollView
@@ -54,16 +62,14 @@ export default function TabOneScreen() {
           position: "relative",
         }}
       >
-        <LinearGradient
-          colors={["#5f62Fe", "#2f42ee"]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 0.75, y: 1 }}
+        <View
           style={{
             position: "absolute",
             top: 0,
             left: 0,
             right: 0,
             height: 240,
+            backgroundColor: color.primary,
           }}
         />
         <View
@@ -96,130 +102,108 @@ export default function TabOneScreen() {
                   borderRadius: 20,
                 }}
               />
-              <Text style={{ color: color.primaryText }}>
-                Hello, <Text style={{ fontWeight: 600 }}>John</Text>
+              <Text style={{ color: color.primaryText, fontWeight: 600 }}>
+                LOGO
               </Text>
             </View>
-            <TouchableOpacity
-              style={{ alignSelf: "flex-start" }}
-              onPress={() => setShowAmount(!showAmount)}
-            >
-              <Feather
-                name={showAmount ? "eye-off" : "eye"}
-                size={20}
-                color={color.primaryText}
-              />
-            </TouchableOpacity>
           </View>
         </View>
-        <View
-          style={{
-            height: 150,
-          }}
+        <ScrollView
+          contentContainerStyle={{ paddingInline: spacing.sm, gap: spacing.sm }}
+          style={{ marginBlock: spacing.sm }}
+          horizontal
+          snapToStart
+          snapToAlignment="start"
+          snapToInterval={width * 0.8}
+          decelerationRate={0.1}
+          scrollEventThrottle={200}
+          showsHorizontalScrollIndicator={false}
         >
-          <View
-            style={{
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Text
-              style={{
-                color: color.primaryText,
-                fontSize: 14,
-                opacity: 80,
-              }}
-            >
-              Saved
-            </Text>
-            <Text
-              style={{
-                color: color.primaryText,
-                fontSize: 36,
-                fontWeight: "semibold",
-              }}
-            >
-              {showAmount ? (
-                "420,690"
-              ) : (
-                <Text style={{ verticalAlign: "middle" }}>******</Text>
-              )}{" "}
-              <Text style={{ fontSize: 16 }}>ETB</Text>
-            </Text>
+          {currentEqub.map((equb) => (
             <View
+              key={equb.id}
               style={{
-                marginTop: spacing.sm,
-                alignSelf: "stretch",
-                backgroundColor: "#FFFFFF20",
-                borderRadius: spacing.xs,
-                borderWidth: 1,
-                marginHorizontal: spacing.sm,
-                borderColor: "#FFFFFF30",
-                padding: 6,
-                flexDirection: "row",
-                justifyContent: "space-around",
+                width: width * 0.8,
+                backgroundColor: color.background,
+                paddingInline: 12,
+                elevation: 2,
+                borderRadius: 12,
+                position: "relative",
               }}
             >
-              <View style={{ alignItems: "center" }}>
+              <View
+                style={{ alignItems: "center", gap: 2, marginVertical: 12 }}
+              >
                 <Text
                   style={{
-                    fontSize: 16,
-                    fontWeight: 600,
-                    color: color.primaryText,
+                    color: color.primary,
+                    fontWeight: 500,
+                    fontSize: 24,
                   }}
                 >
-                  12
+                  {equb.totalAmount.toLocaleString("en", {
+                    currency: "ETB",
+                    style: "currency",
+                  })}
                 </Text>
+
                 <Text
                   style={{
                     fontSize: 14,
-                    color: "#FFFFFFB0",
+                    fontWeight: 500,
                   }}
                 >
-                  Completed
+                  every {equb.withdrawCycleDuration} {equb.withdrawCycleUnit}
                 </Text>
               </View>
-              <View style={{ alignItems: "center" }}>
-                <Text
-                  style={{
-                    fontSize: 16,
-                    fontWeight: 600,
-                    color: color.primaryText,
-                  }}
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  marginTop: 2,
+                  paddingVertical: 12,
+                }}
+              >
+                <View
+                  style={{ gap: 6, flexDirection: "row", alignItems: "center" }}
                 >
-                  6
-                </Text>
-                <Text
-                  style={{
-                    fontSize: 14,
-                    color: "#FFFFFFB0",
-                  }}
+                  <Feather
+                    name="download"
+                    size={12}
+                    color={color.secondaryText}
+                  />
+                  <Text
+                    style={{
+                      color: color.secondaryText,
+                      fontWeight: 500,
+                      fontSize: 12,
+                    }}
+                  >
+                    {equb.depositedAmount.toLocaleString("en", {
+                      currency: "ETB",
+                      style: "currency",
+                    })}
+                  </Text>
+                </View>
+
+                <View
+                  style={{ gap: 6, flexDirection: "row", alignItems: "center" }}
                 >
-                  Running
-                </Text>
-              </View>
-              <View style={{ alignItems: "center" }}>
-                <Text
-                  style={{
-                    fontSize: 16,
-                    fontWeight: 600,
-                    color: color.primaryText,
-                  }}
-                >
-                  8
-                </Text>
-                <Text
-                  style={{
-                    fontSize: 14,
-                    color: "#FFFFFFB0",
-                  }}
-                >
-                  Upcoming
-                </Text>
+                  <Feather name="clock" size={12} color={color.secondaryText} />
+                  <Text
+                    style={{
+                      color: color.secondaryText,
+                      fontWeight: 500,
+                      fontSize: 12,
+                    }}
+                  >
+                    {equb.depositCycleDuration} {equb.depositCycleUnit}
+                  </Text>
+                </View>
               </View>
             </View>
-          </View>
-        </View>
+          ))}
+        </ScrollView>
         <View
           style={{
             backgroundColor: "#F3F4F6",
@@ -260,7 +244,7 @@ export default function TabOneScreen() {
           </Text>
           <View style={{ gap: 12 }}>
             {currentEqub.map((equb, index) => (
-              <EqubCard key={index} {...equb} />
+              <EqubCard key={index} equb={equb} />
             ))}
           </View>
         </View>
@@ -269,23 +253,7 @@ export default function TabOneScreen() {
   );
 }
 
-const EqubCard = ({
-  name,
-  amountPerCycle,
-  members,
-  currentCycle,
-  totalCycle,
-  image,
-  cycleEndDate,
-}: {
-  image: string;
-  name: string;
-  amountPerCycle: number;
-  members: number;
-  currentCycle: number;
-  totalCycle: number;
-  cycleEndDate: string;
-}) => {
+const EqubCard = (props: { equb: (typeof currentEqub)[0] }) => {
   const color = Colors.light;
   return (
     <TouchableOpacity
@@ -303,13 +271,19 @@ const EqubCard = ({
           flexDirection: "row",
         }}
       >
-        <Image
-          source={image}
-          style={{ width: 48, height: 48, borderRadius: 6 }}
-        />
         <View>
-          <Text style={{ color: color.text, fontSize: 16, fontWeight: 500 }}>
-            {name}
+          <MaterialCommunityIcons
+            name="trophy-outline"
+            size={42}
+            style={{ color: color.primary }}
+          />
+        </View>
+        <View>
+          <Text style={{ color: color.text, fontSize: 16, fontWeight: 600 }}>
+            {props.equb.totalAmount.toLocaleString("en", {
+              currency: "ETB",
+              style: "currency",
+            })}
           </Text>
 
           <View
@@ -317,25 +291,24 @@ const EqubCard = ({
               flexDirection: "row",
               gap: 4,
               marginTop: 2,
+              alignItems: "center",
             }}
           >
+            <Feather
+              name="download"
+              size={12}
+              color={color.secondaryText}
+              style={{ color: color.primary }}
+            />
             <Text
               style={{
-                color: color.secondaryText,
+                color: color.primary,
                 fontSize: 14,
                 flexShrink: 0,
+                fontWeight: 500,
               }}
             >
-              <Text
-                style={{
-                  color: color.text,
-
-                  fontWeight: 500,
-                }}
-              >
-                {currentCycle}
-              </Text>
-              /{totalCycle} cycles
+              {props.equb.depositedAmount}
             </Text>
           </View>
         </View>
@@ -354,7 +327,7 @@ const EqubCard = ({
             flexDirection: "row",
           }}
         >
-          <Feather name="users" size={16} color={color.tint} />
+          <Feather name="users" size={16} color={color.secondaryText} />
           <Text
             style={{
               color: color.secondaryText,
@@ -362,12 +335,16 @@ const EqubCard = ({
               fontWeight: 500,
             }}
           >
-            {members}
+            {200}
           </Text>
         </View>
 
         <View style={{ flexDirection: "row", gap: 4 }}>
-          <MaterialIcons name="attach-money" size={16} color={color.tint} />
+          <MaterialIcons
+            name="attach-money"
+            size={16}
+            color={color.secondaryText}
+          />
           <Text
             style={{
               color: color.secondaryText,
@@ -375,11 +352,14 @@ const EqubCard = ({
               fontWeight: 500,
             }}
           >
-            {amountPerCycle} ETB
+            {(200).toLocaleString("en", {
+              style: "currency",
+              currency: "ETB",
+            })}{" "}
           </Text>
         </View>
         <View style={{ flexDirection: "row", gap: 4 }}>
-          <Feather name="calendar" size={16} color={color.tint} />
+          <Feather name="calendar" size={16} color={color.secondaryText} />
           <Text
             style={{
               color: color.secondaryText,
@@ -387,7 +367,7 @@ const EqubCard = ({
               fontWeight: 500,
             }}
           >
-            {cycleEndDate}
+            Nov 2
           </Text>
         </View>
       </View>
