@@ -11,12 +11,13 @@ import { Controller, useForm } from "react-hook-form";
 import { Input } from "./ui/input";
 import { Btn } from "./ui/button";
 import { z } from "zod";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { spacing } from "@/constants/Spacing";
 import Colors from "@/constants/Colors";
 import Animated, { useSharedValue, withSpring } from "react-native-reanimated";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "@/lib/toastStore";
+import BottomSheet from "@gorhom/bottom-sheet";
 
 type Props = {
   onClose?: () => void;
@@ -45,6 +46,8 @@ type FormData = z.infer<typeof formSchema>;
 const CreateEqubSheet = (props: Props) => {
   const [step1Data, setStep1Data] = useState<FormData | undefined>();
   const snapPoints = useMemo(() => ["60%"], []);
+
+  const bottomSheetRef = useRef<BottomSheet>(null);
   const translateX = useSharedValue(0);
   const setPage = (val: number) => {
     translateX.value = withSpring(val * Dimensions.get("window").width * -1, {
@@ -60,8 +63,9 @@ const CreateEqubSheet = (props: Props) => {
       console.log({ terms, ...step1Data });
     },
     onSuccess: () => {
-      props.onClose?.();
       toast("Saved successfully", "success");
+      bottomSheetRef.current?.close();
+      props.onClose?.();
     },
   });
 
@@ -71,6 +75,7 @@ const CreateEqubSheet = (props: Props) => {
       backgroundStyle={{ backgroundColor: "#fff" }}
       snapPoints={snapPoints}
       onClose={props.onClose}
+      ref={bottomSheetRef}
     >
       <Animated.View
         style={{ flexDirection: "row", transform: [{ translateX }] }}
