@@ -3,6 +3,7 @@ import { Tabs } from "expo-router";
 
 import Colors from "@/constants/Colors";
 import { Feather } from "@expo/vector-icons";
+import { Text } from "@/components/ui/Text";
 
 export default function TabLayout() {
   return (
@@ -30,7 +31,23 @@ export default function TabLayout() {
         name="my-equbs"
         options={{
           title: "My Equbs",
-          headerShown: false,
+          headerStyle: {
+            backgroundColor: Colors["light"].background,
+          },
+          headerTitle() {
+            return (
+              <Text
+                style={{
+                  color: Colors["light"].text,
+                  fontWeight: 600,
+                  fontSize: 18,
+                }}
+              >
+                My Equbs
+              </Text>
+            );
+          },
+          headerShadowVisible: false,
           tabBarIcon: ({ color }) => (
             <Feather name="bookmark" size={20} color={color} />
           ),

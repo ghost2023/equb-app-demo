@@ -121,10 +121,7 @@ export default function TabOneScreen() {
           justifyContent: "center",
           backgroundColor: Colors["light"].primary,
         }}
-        onPress={() => {
-          console.log("clicked");
-          return setIsFormOpen(true);
-        }}
+        onPress={() => setIsFormOpen(true)}
       >
         <View
           style={{
