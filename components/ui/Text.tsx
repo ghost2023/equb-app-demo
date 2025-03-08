@@ -19,16 +19,6 @@ const fonts = {
   "800": "black",
 };
 
-// thin: require("../assets/fonts/static/Montserrat-Thin.ttf"),
-// extraLight: require("../assets/fonts/static/Montserrat-ExtraLight.ttf"),
-// light: require("../assets/fonts/static/Montserrat-Light.ttf"),
-// regular: require("../assets/fonts/static/Montserrat-Regular.ttf"),
-// medium: require("../assets/fonts/static/Montserrat-Medium.ttf"),
-// semiBold: require("../assets/fonts/static/Montserrat-SemiBold.ttf"),
-// bold: require("../assets/fonts/static/Montserrat-Bold.ttf"),
-// extraBold: require("../assets/fonts/static/Montserrat-ExtraBold.ttf"),
-// black: require("../assets/fonts/static/Montserrat-Black.ttf"),
-
 const italics = {
   thin: "thinItalic",
   light: "lightItalic",
@@ -46,16 +36,6 @@ const italics = {
   "600": "boldItalic",
   "700": "extraboldItalic",
   "800": "blackItalic",
-
-  // thinItalic: require("../assets/fonts/static/Montserrat-ThinItalic.ttf"),
-  // extraLightItalic: require("../assets/fonts/static/Montserrat-ExtraLightItalic.ttf"),
-  // lightItalic: require("../assets/fonts/static/Montserrat-LightItalic.ttf"),
-  // italic: require("../assets/fonts/static/Montserrat-Italic.ttf"),
-  // mediumItalic: require("../assets/fonts/static/Montserrat-MediumItalic.ttf"),
-  // semiBoldItalic: require("../assets/fonts/static/Montserrat-SemiBoldItalic.ttf"),
-  // boldItalic: require("../assets/fonts/static/Montserrat-BoldItalic.ttf"),
-  // extraBoldItalic: require("../assets/fonts/static/Montserrat-ExtraBoldItalic.ttf"),
-  // blackItalic: require("../assets/fonts/static/Montserrat-BlackItalic.ttf"),
 };
 
 export function Text({ style, ...props }: TextProps) {
