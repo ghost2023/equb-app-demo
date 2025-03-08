@@ -67,14 +67,16 @@ const Input = React.forwardRef<TextInput, TextInputProps & Props>(
             style={[
               {
                 minHeight: 40,
-                fontFamily: "Poppins-Regular",
+                fontFamily: "regular",
                 borderWidth: 1,
                 borderRadius: 6,
                 justifyContent: "center",
                 textAlignVertical: "center",
-                backgroundColor: isFocused ? "transparent" : "#EEEEEE",
+                backgroundColor: isFocused
+                  ? "transparent"
+                  : Colors.light.background,
                 borderColor: error
-                  ? "#feb2b2"
+                  ? "#00000033"
                   : isFocused
                     ? COLORS.light.primary
                     : "#E5E7EB",
