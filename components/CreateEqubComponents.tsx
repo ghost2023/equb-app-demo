@@ -18,6 +18,7 @@ import Animated, { useSharedValue, withSpring } from "react-native-reanimated";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "@/lib/toastStore";
 import BottomSheet from "@gorhom/bottom-sheet";
+import Dropdown from "./ui/Dropdown";
 
 type Props = {
   onClose?: () => void;
@@ -25,27 +26,30 @@ type Props = {
   isOpen?: boolean;
 };
 
+const timeUnits = ["Day", "Week", "Month"] as const;
+
 const formSchema = z.object({
   cycles: z
     .string()
-    .nonempty("Number of cycles is required")
+    .nonempty("Required")
     .refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
-      message: "Cycles must be a positive number",
+      message: "Invalid",
     }),
   amount: z
     .string()
-    .nonempty("Amount is required")
+    .nonempty("Required")
     .refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
-      message: "Amount must be a positive number",
+      message: "Invalid",
     }),
-  depositFrequency: z.string().nonempty("Deposit Frequency is required"),
+  depositFrequency: z.string().nonempty("Required"),
+  depositFrequencyUnit: z.enum(timeUnits).default("Day"),
 });
 
 type FormData = z.infer<typeof formSchema>;
 
 const CreateEqubSheet = (props: Props) => {
   const [step1Data, setStep1Data] = useState<FormData | undefined>();
-  const snapPoints = useMemo(() => ["60%"], []);
+  const snapPoints = useMemo(() => [360, 420], []);
 
   const bottomSheetRef = useRef<BottomSheet>(null);
   const translateX = useSharedValue(0);
@@ -76,9 +80,11 @@ const CreateEqubSheet = (props: Props) => {
       snapPoints={snapPoints}
       onClose={props.onClose}
       ref={bottomSheetRef}
+      enablePanDownToClose={false}
+      viewProps={{ style: { flex: 1 } }}
     >
       <Animated.View
-        style={{ flexDirection: "row", transform: [{ translateX }] }}
+        style={{ flexDirection: "row", transform: [{ translateX }], flex: 1 }}
       >
         <Step1
           onSave={(data) => {
@@ -112,6 +118,7 @@ function Step1(props: StepProps) {
     props.onSave(data);
   });
   const width = useWindowDimensions().width;
+  console.log(errors);
   return (
     <View style={{ padding: spacing.sm, paddingTop: 0, width }}>
       <Text style={{ fontSize: 24, fontWeight: "600" }}>Create Your Equib</Text>
@@ -157,44 +164,69 @@ function Step1(props: StepProps) {
           )}
         />
 
-        <View
-          style={{
-            flexDirection: "row",
-            gap: spacing.sm,
-            alignItems: "flex-end",
-          }}
-        >
-          <Controller
-            name="depositFrequency"
-            control={control}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <Input
-                label="Deposit Frequency"
-                keyboardType="numeric"
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                containerStyle={{ flexGrow: 1 }}
-                error={errors.depositFrequency?.message}
-              />
-            )}
-          />
+        <View>
+          <View
+            style={{
+              flexDirection: "row",
+              gap: spacing.sm,
+              alignItems: "flex-end",
+            }}
+          >
+            <Controller
+              name="depositFrequency"
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <Input
+                  label="Deposit Frequency"
+                  keyboardType="numeric"
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  containerStyle={{ flexGrow: 1 }}
+                  error={errors.depositFrequency?.message}
+                />
+              )}
+            />
 
-          <Controller
-            name="depositFrequency"
-            control={control}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <Input
-                keyboardType="numeric"
-                onBlur={onBlur}
-                onChangeText={onChange}
-                containerStyle={{ flexGrow: 1 }}
-                value={value}
-                error={errors.depositFrequency?.message}
-              />
-            )}
-          />
+            <Controller
+              name="depositFrequencyUnit"
+              control={control}
+              render={({ field: { onChange } }) => (
+                <View
+                  style={{
+                    flex: 1,
+                    paddingTop: 18,
+                    justifyContent: "flex-start",
+                    alignSelf: "flex-start",
+                  }}
+                >
+                  <Dropdown
+                    onChange={(v) => onChange(v.data)}
+                    defaultValue={{ label: "Day", data: "Day" }}
+                    viewProps={{
+                      style: {
+                        backgroundColor: Colors.light.background,
+                        borderRadius: 8,
+                        borderWidth: 1,
+                        borderColor: "#00000033",
+                        paddingHorizontal: 8,
+                        height: 40,
+                        flexDirection: "row",
+                        alignItems: "center",
+                      },
+                    }}
+                    direction="up"
+                    items={timeUnits.map((unit) => ({
+                      label: unit,
+                      data: unit,
+                    }))}
+                  />
+                </View>
+              )}
+            />
+          </View>
         </View>
+
         {/* Submit Button */}
         <Btn label="Next" onTouchStart={onSubmit} style={{ marginTop: 12 }} />
       </View>
