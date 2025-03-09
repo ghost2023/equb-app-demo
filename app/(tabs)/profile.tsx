@@ -1,16 +1,65 @@
+import AuthSheet from "@/components/AuthSheet";
+import { Text } from "@/components/ui/Text";
+import { Btn } from "@/components/ui/button";
 import Colors from "@/constants/Colors";
+import { useSession } from "@/context/AuthProviders";
 import { Feather } from "@expo/vector-icons";
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
-  Text,
   Image,
   TouchableOpacity,
   StyleSheet,
   ScrollView,
 } from "react-native";
 
+const links = [
+  {
+    name: "Personal Information",
+    icon: <Feather name="user" size={16} color="#000" />,
+    href: "personal-information",
+  },
+  {
+    name: "Transaction History",
+    icon: <Feather name="credit-card" size={16} color="#000" />,
+    href: "transaction-history",
+  },
+  {
+    name: "Settings",
+    icon: <Feather name="settings" size={16} color="#000" />,
+    href: "settings",
+  },
+  {
+    name: "Change Phone Number",
+    icon: <Feather name="phone" size={16} color="#000" />,
+    href: "change-phone-number",
+  },
+  {
+    name: "Change Pin Number",
+    icon: <Feather name="lock" size={16} color="#000" />,
+    href: "change-pin",
+  },
+];
+
 export default function ProfilePage() {
+  const { session } = useSession();
+  const [isOpen, setIsOpen] = useState(false);
+  if (session) {
+    return <ProfileAuthPage />;
+  }
+  return (
+    <View style={styles.container}>
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text style={{ fontSize: 16, fontWeight: 500, marginBottom: 12 }}>
+          Login to see your profile
+        </Text>
+        <Btn label="Login" onPress={() => setIsOpen(true)} />
+      </View>
+      <AuthSheet isOpen={isOpen} onClose={() => setIsOpen(false)} />
+    </View>
+  );
+}
+function ProfileAuthPage() {
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.content}>
@@ -20,112 +69,90 @@ export default function ProfilePage() {
               source={{ uri: "https://picsum.photos/100" }}
               style={styles.profileImage}
             />
-            <View
-              style={{
-                position: "absolute",
-                bottom: 4,
-                right: 4,
-              }}
-            >
-              <TouchableOpacity
-                style={{
-                  width: 32,
-                  height: 32,
-                  borderRadius: 8,
-                  backgroundColor: Colors.light.primary,
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <Feather name="edit-2" size={16} color="#FFFFFF" />
-              </TouchableOpacity>
-            </View>
           </View>
           <View>
             <Text style={styles.profileName}>John Doe</Text>
             <Text style={styles.profileEmail}>john.doe@example.com</Text>
           </View>
         </View>
-
-        <View style={styles.card}>
+        <View style={[styles.buttonGroup, { paddingHorizontal: 12, gap: 8 }]}>
+          <Text style={{ fontSize: 16, fontWeight: 600 }}>Overview</Text>
           <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-
-              marginBottom: 4,
-            }}
+            style={{ justifyContent: "space-between", flexDirection: "row" }}
           >
             <Text
               style={{
-                fontSize: 14,
-                fontWeight: 500,
+                fontSize: 12,
+                fontWeight: 600,
                 color: Colors.light.secondaryText,
               }}
             >
-              Account Balance
+              Equib Joined
             </Text>
-            <TouchableOpacity style={{}}>
-              <Feather name="plus" color={Colors.light.primary} size={20} />
-            </TouchableOpacity>
+            <Text style={{ fontSize: 14, fontWeight: 600 }}>20</Text>
           </View>
-          <View style={styles.cardContent}>
-            <Text style={styles.balanceText}>$2,500</Text>
+          <View
+            style={{ justifyContent: "space-between", flexDirection: "row" }}
+          >
+            <Text
+              style={{
+                fontSize: 12,
+                fontWeight: 600,
+                color: Colors.light.secondaryText,
+              }}
+            >
+              Amount Contributed
+            </Text>
+            <Text style={{ fontSize: 14, fontWeight: 600 }}>
+              {(23000).toLocaleString("en", {
+                style: "currency",
+                currency: "ETB",
+              })}
+            </Text>
           </View>
-        </View>
-
-        <View style={styles.card}>
-          <Text style={{ fontWeight: 500 }}>Equib Participation</Text>
-          <View style={{ marginTop: 8 }}>
-            <View style={styles.participationRow}>
-              <Text style={styles.participationLabel}>Active Equibs</Text>
-              <Text style={styles.participationValue}>2</Text>
-            </View>
-            <View style={styles.participationRow}>
-              <Text style={styles.participationLabel}>Total Contributed</Text>
-              <Text style={styles.participationValue}>$3,600</Text>
-            </View>
-            <View style={styles.participationRow}>
-              <Text style={styles.participationLabel}>Payouts Received</Text>
-              <Text style={styles.participationValue}>$2,000</Text>
-            </View>
+          <View
+            style={{ justifyContent: "space-between", flexDirection: "row" }}
+          >
+            <Text
+              style={{
+                fontSize: 12,
+                fontWeight: 600,
+                color: Colors.light.secondaryText,
+              }}
+            >
+              Total Payout
+            </Text>
+            <Text style={{ fontSize: 14, fontWeight: 600 }}>
+              {(96000).toLocaleString("en", {
+                style: "currency",
+                currency: "ETB",
+              })}
+            </Text>
           </View>
         </View>
 
         <View style={styles.buttonGroup}>
-          <TouchableOpacity style={styles.outlineButton}>
-            <Feather name="user" size={20} color="#000" style={styles.icon} />
-            <Text style={styles.buttonText}>Personal Information</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.outlineButton}>
-            <Feather
-              name="credit-card"
-              size={20}
-              color="#000"
-              style={styles.icon}
-            />
-            <Text style={styles.buttonText}>Payment Methods</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.outlineButton}>
-            <Feather
-              name="settings"
-              size={20}
-              color="#000"
-              style={styles.icon}
-            />
-            <Text style={styles.buttonText}>Settings</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={[styles.outlineButton, styles.logoutButton]}>
-            <Feather
-              name="log-out"
-              size={20}
-              color="#FF0000"
-              style={styles.icon}
-            />
-            <Text style={styles.logoutText}>Log Out</Text>
-          </TouchableOpacity>
+          {links.map((link) => (
+            <TouchableOpacity
+              key={link.name}
+              style={styles.outlineButton}
+              onPress={() => console.log(link.href)}
+            >
+              {link.icon}
+              <Text style={styles.buttonText}>{link.name}</Text>
+            </TouchableOpacity>
+          ))}
         </View>
+
+        <TouchableOpacity style={[styles.outlineButton, styles.logoutButton]}>
+          <Feather
+            name="log-out"
+            size={20}
+            color="#FF0000"
+            style={styles.icon}
+          />
+          <Text style={styles.logoutText}>Log Out</Text>
+        </TouchableOpacity>
       </ScrollView>
     </View>
   );
@@ -133,53 +160,48 @@ export default function ProfilePage() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#F3F4F6" },
-  content: { paddingHorizontal: 16, paddingTop: 24 },
+  content: { paddingHorizontal: 16, paddingTop: 24, flex: 1 },
   profileSection: {
     flexDirection: "row",
     marginBottom: 24,
     gap: 12,
-    backgroundColor: "white",
     borderRadius: 12,
-    elevation: 2,
     overflow: "hidden",
   },
   profileImageContainer: { position: "relative" },
-  profileImage: { width: 120, height: 120 },
+  profileImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 12,
+  },
   profileName: { fontSize: 20, fontWeight: 600 },
-  profileEmail: { color: Colors.light.secondaryText },
-  card: {
-    backgroundColor: "#FFFFFF",
-    borderRadius: 8,
-    padding: 12,
+  profileEmail: { color: Colors.light.secondaryText, fontWeight: 500 },
+  buttonGroup: {
     marginBottom: 16,
-    elevation: 1,
-  },
-  cardTitle: {},
-  cardContent: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  balanceText: { fontSize: 24, fontWeight: 600 },
-  buttonGroup: { marginBottom: 16 },
-  outlineButton: {
     backgroundColor: "#FFFFFF",
+    borderRadius: 8,
+    paddingVertical: 8,
+    elevation: 2,
+    boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.15)",
+  },
+  outlineButton: {
     flexDirection: "row",
     alignItems: "center",
-    elevation: 1,
-    borderRadius: 8,
-    padding: 12,
-    marginBottom: 8,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
   },
   icon: { marginRight: 8 },
-  buttonText: { fontSize: 14 },
-  logoutButton: { borderColor: "#EF4444" },
-  logoutText: { color: "#EF4444" },
-  participationRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 4,
+  buttonText: { fontSize: 14, marginLeft: 8, fontWeight: 500 },
+  logoutButton: {
+    borderColor: "#EF4444",
+    borderRadius: 8,
+    backgroundColor: "#FFDDDD",
+    justifyContent: "center",
+    paddingVertical: 8,
+    marginTop: "auto",
+    elevation: 2,
+    boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.15)",
+    marginBottom: 16,
   },
-  participationLabel: { color: "#6B7280" },
-  participationValue: { fontWeight: "500" },
+  logoutText: { color: "#F31717" },
 });
