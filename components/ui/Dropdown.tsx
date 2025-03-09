@@ -3,13 +3,15 @@ import { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { useState } from "react";
 import { Pressable, View, ViewProps } from "react-native";
 import Animated, { useSharedValue, withSpring } from "react-native-reanimated";
-import { Text } from "./text";
+import { Text } from "./Text";
+import Colors from "@/constants/Colors";
 
 type Props<T> = {
   items: { label: string; data: T }[];
   viewProps: ViewProps;
   defaultValue?: { label: string; data: T };
   onChange: (p: { data: T; label: string }) => void;
+  direction?: "up" | "down";
 };
 
 const Dropdown = <T,>(props: Props<T>) => {
@@ -27,24 +29,32 @@ const Dropdown = <T,>(props: Props<T>) => {
             {selected?.label || "Select an option"}
           </Text>
 
-          <Entypo name="chevron-small-down" size={18} color="#090909" />
+          <Entypo
+            name="chevron-small-down"
+            size={18}
+            color={Colors.light.secondaryText}
+          />
         </View>
       </Pressable>
 
       <Animated.View
         style={[
           {
-            marginTop: 4,
-            top: "100%",
+            ...(props.direction && props.direction == "up"
+              ? {
+                top: -4,
+                transform: [{ translateY: "-100%" }],
+              }
+              : {
+                marginTop: 4,
+                top: "100%",
+              }),
             width: "100%",
             position: "absolute",
             height,
             overflow: "hidden",
             borderRadius: 8,
-            shadowColor: "#000",
-            shadowOpacity: 0.2,
-            shadowRadius: 7,
-            elevation: 2,
+            boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.15)",
           },
         ]}
       >
@@ -56,17 +66,19 @@ const Dropdown = <T,>(props: Props<T>) => {
           }}
           onLayout={(e) => {
             height.value = withSpring(open ? e.nativeEvent.layout.height : 0, {
-              dampingRatio: 1.1,
-              duration: 60,
+              dampingRatio: 1.0,
+              duration: 100,
             });
           }}
         >
           <BottomSheetScrollView
             style={{
-              backgroundColor: "#eee",
+              backgroundColor: Colors.light.background,
               borderRadius: 10,
-              paddingBottom: 10,
+              paddingBottom: 6,
               maxHeight: 120,
+              borderWidth: 1,
+              borderColor: "#00000033",
             }}
             contentContainerStyle={{ flexGrow: 1, paddingHorizontal: 2 }}
           >
@@ -74,12 +86,12 @@ const Dropdown = <T,>(props: Props<T>) => {
               <Pressable
                 key={i}
                 style={({ pressed }) => ({
-                  paddingHorizontal: 12,
-                  paddingVertical: 6,
-                  borderRadius: 10,
+                  paddingHorizontal: 8,
+                  paddingVertical: 8,
+                  borderRadius: 4,
                   flexDirection: "row",
                   alignItems: "center",
-                  backgroundColor: pressed ? "#fff8" : "#EEE",
+                  backgroundColor: pressed ? "#fff" : "transparent",
                 })}
                 onPress={() => {
                   setSelected(item);
