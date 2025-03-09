@@ -16,6 +16,7 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "@/lib/toastStore";
 import BottomSheet from "@gorhom/bottom-sheet";
 import { OtpInput } from "react-native-otp-entry";
+import { router } from "expo-router";
 
 type Props = {
   onClose?: () => void;
@@ -53,7 +54,7 @@ const AuthSheet = (props: Props) => {
       toast("Welcome", "success");
       bottomSheetRef.current?.close();
       props.onClose?.();
-
+      router.push("/onboarding");
       setPage(0);
     },
   });
