@@ -148,7 +148,7 @@ function ProfileAuthPage() {
           <Feather
             name="log-out"
             size={20}
-            color="#FF0000"
+            color="#F31717"
             style={styles.icon}
           />
           <Text style={styles.logoutText}>Log Out</Text>
