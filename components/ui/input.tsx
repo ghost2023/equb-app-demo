@@ -76,10 +76,10 @@ const Input = React.forwardRef<TextInput, TextInputProps & Props>(
                   ? "transparent"
                   : Colors.light.background,
                 borderColor: error
-                  ? "#00000033"
+                  ? "#F31717"
                   : isFocused
                     ? COLORS.light.primary
-                    : "#E5E7EB",
+                    : "#00000033",
                 paddingHorizontal: 12,
                 fontSize: 14,
               },
