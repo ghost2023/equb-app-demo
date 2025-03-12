@@ -1,7 +1,5 @@
-import { env } from "@/lib/env";
 import { User } from "@/lib/types";
 import { useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
 import {
   ReactNode,
   createContext,
@@ -21,7 +19,7 @@ type AuthContextType = {
   session?: Session;
   status: StatusType;
   login: () => Promise<void>;
-  signup: () => Promise<void>;
+  signup: (u: User) => Promise<void>;
   logout: () => Promise<void>;
 };
 
