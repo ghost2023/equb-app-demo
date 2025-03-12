@@ -168,7 +168,7 @@ function Step1(props: StepProps) {
           <View
             style={{
               flexDirection: "row",
-              gap: spacing.sm,
+              gap: spacing.xs,
               alignItems: "flex-end",
             }}
           >
@@ -191,34 +191,29 @@ function Step1(props: StepProps) {
             <Controller
               name="depositFrequencyUnit"
               control={control}
-              render={({ field: { onChange } }) => (
+              render={({ field }) => (
                 <View
                   style={{
                     flex: 1,
                     paddingTop: 18,
+                    flexShrink: 0,
+                    minWidth: 100,
+                    width: "100%",
                     justifyContent: "flex-start",
                     alignSelf: "flex-start",
                   }}
                 >
                   <Dropdown
-                    onChange={(v) => onChange(v.data)}
-                    defaultValue={{ label: "Day", data: "Day" }}
-                    viewProps={{
-                      style: {
-                        backgroundColor: Colors.light.background,
-                        borderRadius: 8,
-                        borderWidth: 1,
-                        borderColor: "#00000033",
-                        paddingHorizontal: 8,
-                        height: 40,
-                        flexDirection: "row",
-                        alignItems: "center",
-                      },
+                    value={field.value}
+                    schema={{
+                      label: "label",
+                      value: "value",
                     }}
-                    direction="up"
+                    placeholder="Select Duration"
+                    setValue={(v) => field.onChange(v(field.value))}
                     items={timeUnits.map((unit) => ({
                       label: unit,
-                      data: unit,
+                      value: unit,
                     }))}
                   />
                 </View>
