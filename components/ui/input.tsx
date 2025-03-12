@@ -80,7 +80,7 @@ const Input = React.forwardRef<TextInput, TextInputProps & Props>(
                   : isFocused
                     ? COLORS.light.primary
                     : "#00000033",
-                paddingHorizontal: 12,
+                paddingHorizontal: 8,
                 fontSize: 14,
               },
               style,
@@ -109,8 +109,8 @@ const Input = React.forwardRef<TextInput, TextInputProps & Props>(
             >
               <Feather
                 name={showPassword ? "eye" : "eye-off"}
-                size={22}
-                color="#718096"
+                size={20}
+                color={Colors.light.secondaryText}
               />
             </Pressable>
           )}
