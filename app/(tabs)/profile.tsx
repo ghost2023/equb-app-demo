@@ -60,6 +60,7 @@ export default function ProfilePage() {
   );
 }
 function ProfileAuthPage() {
+  const auth = useSession();
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.content}>
@@ -144,7 +145,10 @@ function ProfileAuthPage() {
           ))}
         </View>
 
-        <TouchableOpacity style={[styles.outlineButton, styles.logoutButton]}>
+        <TouchableOpacity
+          onPress={auth.logout}
+          style={[styles.outlineButton, styles.logoutButton]}
+        >
           <Feather
             name="log-out"
             size={20}
@@ -193,9 +197,9 @@ const styles = StyleSheet.create({
   icon: { marginRight: 8 },
   buttonText: { fontSize: 14, marginLeft: 8, fontWeight: 500 },
   logoutButton: {
-    borderColor: "#EF4444",
+    borderColor: "#fff",
     borderRadius: 8,
-    backgroundColor: "#FFDDDD",
+    backgroundColor: "#FFF",
     justifyContent: "center",
     paddingVertical: 8,
     marginTop: "auto",
