@@ -1,111 +1,81 @@
-import { Entypo } from "@expo/vector-icons";
-import { BottomSheetScrollView } from "@gorhom/bottom-sheet";
-import { useState } from "react";
-import { Pressable, View, ViewProps } from "react-native";
-import Animated, { useSharedValue, withSpring } from "react-native-reanimated";
-import { Text } from "./Text";
+import { Dispatch, SetStateAction, useState } from "react";
 import Colors from "@/constants/Colors";
+import DropDownPicker, {
+  DropDownPickerProps,
+} from "react-native-dropdown-picker";
 
-type Props<T> = {
-  items: { label: string; data: T }[];
-  viewProps: ViewProps;
-  defaultValue?: { label: string; data: T };
-  onChange: (p: { data: T; label: string }) => void;
-  direction?: "up" | "down";
+type Props<ValueType> = Omit<
+  DropDownPickerProps<ValueType>,
+  "open" | "setOpen"
+> & {
+  open?: boolean;
+  setOpen?: Dispatch<SetStateAction<boolean>>;
 };
 
-const Dropdown = <T,>(props: Props<T>) => {
+const Dropdown = <ValueType,>({
+  style,
+  arrowIconStyle,
+  arrowIconContainerStyle,
+  dropDownContainerStyle,
+  multiple,
+  ...props
+}: Props<ValueType>) => {
   const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState<{ label: string; data: T } | null>(
-    props.defaultValue || null,
-  );
-  const height = useSharedValue(0);
 
   return (
-    <View style={{ position: "relative", zIndex: 50 }}>
-      <Pressable onPress={() => setOpen(!open)}>
-        <View {...props.viewProps}>
-          <Text style={{ flex: 1, fontWeight: 500 }}>
-            {selected?.label || "Select an option"}
-          </Text>
-
-          <Entypo
-            name="chevron-small-down"
-            size={18}
-            color={Colors.light.secondaryText}
-          />
-        </View>
-      </Pressable>
-
-      <Animated.View
-        style={[
-          {
-            ...(props.direction && props.direction == "up"
-              ? {
-                top: -4,
-                transform: [{ translateY: "-100%" }],
-              }
-              : {
-                marginTop: 4,
-                top: "100%",
-              }),
-            width: "100%",
-            position: "absolute",
-            height,
-            overflow: "hidden",
-            borderRadius: 8,
-            boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.15)",
-          },
-        ]}
-      >
-        <View
-          style={{
-            position: "absolute",
-            width: "100%",
-            height: open ? "auto" : 0,
-          }}
-          onLayout={(e) => {
-            height.value = withSpring(open ? e.nativeEvent.layout.height : 0, {
-              dampingRatio: 1.0,
-              duration: 100,
-            });
-          }}
-        >
-          <BottomSheetScrollView
-            style={{
-              backgroundColor: Colors.light.background,
-              borderRadius: 10,
-              paddingBottom: 6,
-              maxHeight: 120,
-              borderWidth: 1,
-              borderColor: "#00000033",
-            }}
-            contentContainerStyle={{ flexGrow: 1, paddingHorizontal: 2 }}
-          >
-            {props.items.map((item, i) => (
-              <Pressable
-                key={i}
-                style={({ pressed }) => ({
-                  paddingHorizontal: 8,
-                  paddingVertical: 8,
-                  borderRadius: 4,
-                  flexDirection: "row",
-                  alignItems: "center",
-                  backgroundColor: pressed ? "#fff" : "transparent",
-                })}
-                onPress={() => {
-                  setSelected(item);
-                  setOpen(false);
-                  props.onChange(item);
-                }}
-              >
-                <Text style={{ fontWeight: 500 }}>{item.label}</Text>
-              </Pressable>
-            ))}
-          </BottomSheetScrollView>
-        </View>
-      </Animated.View>
-    </View>
+    // @ts-ignore
+    <DropDownPicker
+      open={open}
+      setOpen={setOpen}
+      multiple={multiple as any}
+      style={[
+        {
+          borderColor: "#00000033",
+          borderWidth: 1,
+          borderRadius: 8,
+          backgroundColor: Colors.light.background,
+          minHeight: 40,
+        },
+        style,
+      ]}
+      arrowIconStyle={[
+        {
+          height: 16,
+          width: 16,
+          borderColor: Colors.light.secondaryText,
+        },
+        arrowIconStyle,
+      ]}
+      dropDownContainerStyle={[
+        {
+          borderColor: "#00000033",
+          backgroundColor: Colors.light.background,
+          marginVertical: 4,
+          elevation: 2,
+          boxShadow: "0px 0px 2px rgba(0, 0, 0, 0.15)",
+          zIndex: 10,
+        },
+        dropDownContainerStyle,
+      ]}
+      tickIconStyle={{
+        height: 16,
+        width: 16,
+      }}
+      listItemLabelStyle={{
+        fontFamily: "medium",
+        fontSize: 14,
+      }}
+      listItemContainerStyle={{
+        height: "auto",
+        paddingVertical: 8,
+      }}
+      placeholderStyle={{
+        fontFamily: "regular",
+        fontSize: 14,
+        color: Colors.light.secondaryText,
+      }}
+      {...props}
+    />
   );
 };
 
