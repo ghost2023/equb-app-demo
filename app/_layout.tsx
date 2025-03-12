@@ -54,6 +54,19 @@ function RootLayoutNav() {
   return (
     <Stack>
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="onboarding"
+        options={{
+          title: "Onboarding",
+          headerShadowVisible: false,
+          headerStyle: {
+            backgroundColor: "white",
+          },
+          headerTitleStyle: {
+            fontFamily: "semiBold",
+          },
+        }}
+      />
     </Stack>
   );
 }
