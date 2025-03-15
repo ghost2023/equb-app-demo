@@ -18,7 +18,7 @@ import Animated, { useSharedValue, withSpring } from "react-native-reanimated";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "@/lib/toastStore";
 import BottomSheet from "@gorhom/bottom-sheet";
-import Dropdown from "./ui/Dropdown";
+import Select from "./ui/Select";
 
 type Props = {
   onClose?: () => void;
@@ -203,7 +203,7 @@ function Step1(props: StepProps) {
                     alignSelf: "flex-start",
                   }}
                 >
-                  <Dropdown
+                  <Select
                     value={field.value}
                     schema={{
                       label: "label",

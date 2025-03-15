@@ -6,7 +6,7 @@ import { View } from "react-native";
 import Animated, { FadeInUp, FadeOutUp } from "react-native-reanimated";
 import Colors from "@/constants/Colors";
 import { z } from "zod";
-import Dropdown from "./ui/Dropdown";
+import Select from "./ui/Select";
 
 type Props = {
   onChange: (val: string) => void;
@@ -74,7 +74,7 @@ const DateInput = (props: Props) => {
           selectionColor={"#444444"}
         />
 
-        <Dropdown
+        <Select
           value={month}
           schema={{
             label: "label",

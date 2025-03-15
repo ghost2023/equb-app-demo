@@ -1,5 +1,5 @@
 import DateInput from "@/components/DateInput";
-import Dropdown from "@/components/ui/Dropdown";
+import Select from "@/components/ui/Select";
 import { Text } from "@/components/ui/Text";
 import { Btn } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -130,7 +130,7 @@ const onboarding = () => {
                 >
                   Gender
                 </Text>
-                <Dropdown
+                <Select
                   items={[
                     { label: "Male", value: "male" },
                     { label: "Female", value: "female" },

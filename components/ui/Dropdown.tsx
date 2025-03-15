@@ -1,82 +1,121 @@
-import { Dispatch, SetStateAction, useState } from "react";
-import Colors from "@/constants/Colors";
-import DropDownPicker, {
-  DropDownPickerProps,
-} from "react-native-dropdown-picker";
+import { useEffect, useState } from "react";
+import { Pressable, View, ViewProps } from "react-native";
+import Animated, { Easing, withTiming } from "react-native-reanimated";
 
-type Props<ValueType> = Omit<
-  DropDownPickerProps<ValueType>,
-  "open" | "setOpen"
-> & {
+type Props = {
   open?: boolean;
-  setOpen?: Dispatch<SetStateAction<boolean>>;
+  onOpenChange?: (isOpen: boolean) => void;
+  containerProps?: ViewProps;
+  triggerProps?: ViewProps;
+  dropdownProps?: ViewProps;
+  children?: React.ReactNode | React.ReactNode[];
+  trigger: (isOpen: boolean) => React.ReactNode;
 };
 
-const Dropdown = <ValueType,>({
-  style,
-  arrowIconStyle,
-  arrowIconContainerStyle,
-  dropDownContainerStyle,
-  multiple,
-  ...props
-}: Props<ValueType>) => {
-  const [open, setOpen] = useState(false);
+const Dropdown = (props: Props) => {
+  const [isOpen, setOpen] = useState(props.open ?? false);
 
+  useEffect(() => {
+    if (props.open !== undefined) {
+      setOpen(props.open);
+    }
+  }, [props.open]);
+
+  const { style: containerStyle, ...restContainerProps } =
+    props.containerProps ?? {};
+
+  const { style: dropdownStyle, ...restDropdownProps } =
+    props.dropdownProps ?? {};
   return (
-    // @ts-ignore
-    <DropDownPicker
-      open={open}
-      setOpen={setOpen}
-      multiple={multiple as any}
-      style={[
-        {
-          borderColor: "#00000033",
-          borderWidth: 1,
-          borderRadius: 8,
-          backgroundColor: Colors.light.background,
-          minHeight: 40,
-        },
-        style,
-      ]}
-      arrowIconStyle={[
-        {
-          height: 16,
-          width: 16,
-          borderColor: Colors.light.secondaryText,
-        },
-        arrowIconStyle,
-      ]}
-      dropDownContainerStyle={[
-        {
-          borderColor: "#00000033",
-          backgroundColor: Colors.light.background,
-          marginVertical: 4,
-          elevation: 2,
-          boxShadow: "0px 0px 2px rgba(0, 0, 0, 0.15)",
-          zIndex: 10,
-        },
-        dropDownContainerStyle,
-      ]}
-      tickIconStyle={{
-        height: 16,
-        width: 16,
-      }}
-      listItemLabelStyle={{
-        fontFamily: "medium",
-        fontSize: 14,
-      }}
-      listItemContainerStyle={{
-        height: "auto",
-        paddingVertical: 8,
-      }}
-      placeholderStyle={{
-        fontFamily: "regular",
-        fontSize: 14,
-        color: Colors.light.secondaryText,
-      }}
-      {...props}
-    />
+    <View
+      style={[{ position: "relative", zIndex: 50 }, containerStyle]}
+      {...restContainerProps}
+    >
+      <Pressable onPress={() => {
+        if (props.onOpenChange) props.onOpenChange(!isOpen);
+        else setOpen(!isOpen);
+      }} {...props.triggerProps}>
+        {props.trigger(isOpen)}
+      </Pressable>
+
+      {isOpen && (
+        <Animated.View
+          style={[
+            {
+              marginTop: 4,
+              top: "100%",
+              width: "100%",
+              position: "absolute",
+              borderRadius: 8,
+              transformOrigin: "top",
+            },
+            dropdownStyle,
+          ]}
+          entering={myzoomin}
+          exiting={myzoomout}
+          {...restDropdownProps}
+        >
+          {props.children}
+        </Animated.View>
+      )}
+    </View>
   );
 };
 
 export default Dropdown;
+
+const animationDuration = 100;
+const myzoomout = () => {
+  "worklet";
+  const animations = {
+    transform: [
+      {
+        scaleY: withTiming(0, {
+          duration: animationDuration,
+          easing: Easing.out(Easing.ease),
+        }),
+      },
+    ],
+    opacity: withTiming(0, {
+      duration: animationDuration,
+      easing: Easing.out(Easing.ease),
+    }),
+  };
+
+  const initialValues = {
+    transform: [{ scaleY: 1 }],
+    opacity: 1,
+  };
+  return {
+    initialValues,
+    animations,
+  };
+};
+
+const myzoomin = () => {
+  "worklet";
+  const animations = {
+    transform: [
+      {
+        scaleY: withTiming(1, {
+          duration: animationDuration,
+          easing: Easing.out(Easing.ease),
+        }),
+      },
+    ],
+
+    opacity: withTiming(1, {
+      duration: animationDuration,
+      easing: Easing.out(Easing.ease),
+    }),
+  };
+
+  const initialValues = {
+    transform: [{ scaleY: 0 }],
+    opacity: 0,
+  };
+  return {
+    initialValues,
+    animations,
+  };
+};
