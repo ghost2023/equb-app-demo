@@ -4,3 +4,13 @@ export type User = {
   phone: string;
   date_of_birth: string;
 };
+
+export type Equb = {
+  depositAmount: number;
+  depositFrequency: number;
+  drawFrequency: number;
+  id: number;
+  winningAmount: number;
+  winningFrequency: number;
+  members: number;
+};
