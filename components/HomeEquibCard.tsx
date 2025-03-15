@@ -4,8 +4,9 @@ import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { TouchableOpacity, View } from "react-native";
 import { Skeleton } from "./ui/skeleton";
+import { Equb } from "@/lib/types";
 
-const EqubCard = (props: { equb: any }) => {
+const EqubCard = (props: { equb: Equb }) => {
   const color = Colors.light;
   return (
     <TouchableOpacity
@@ -44,7 +45,7 @@ const EqubCard = (props: { equb: any }) => {
         <View style={{ flex: 1 }}>
           <View>
             <Text style={{ color: color.text, fontSize: 16, fontWeight: 600 }}>
-              {props.equb.totalAmount.toLocaleString("en", {
+              {props.equb.winningAmount.toLocaleString("en", {
                 currency: "ETB",
                 style: "currency",
               })}
@@ -72,7 +73,7 @@ const EqubCard = (props: { equb: any }) => {
                   fontWeight: 500,
                 }}
               >
-                {props.equb.depositedAmount}
+                {props.equb.depositAmount}
               </Text>
             </View>
           </View>
@@ -113,8 +114,7 @@ const EqubCard = (props: { equb: any }) => {
                   fontSize: 14,
                 }}
               >
-                {props.equb.withdrawCycleDuration}{" "}
-                {props.equb.withdrawCycleUnit}
+                {props.equb.winningFrequency}{" "}
               </Text>
             </View>
             <View
@@ -131,7 +131,7 @@ const EqubCard = (props: { equb: any }) => {
                   fontSize: 14,
                 }}
               >
-                {props.equb.depositCycleDuration} {props.equb.depositCycleUnit}
+                {props.equb.depositFrequency}
               </Text>
             </View>
           </View>
