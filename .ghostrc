@@ -1,0 +1,37 @@
+port: 8080
+latency: 150
+jitter: 50
+endpoints:
+  - name: "Get Equbs"
+    url: "/api/equbs"
+    response:
+      status_code: 200
+      data:
+        type: array
+        range: [6, 6 ]
+        items:
+          type: object
+          fields:
+            id:
+              type: number
+              range: [1, 100]
+            winningAmount:
+              type: number
+              range: [10000, 1000000]
+
+            winningFrequency:
+              type: number # days
+              range: [30, 100]
+            drawFrequency:
+              type: number # days
+              range: [3, 100]
+            depositAmount:
+              type: number
+              range: [100, 10000]
+            depositFrequency:
+              type: number # days
+              range: [3, 100]
+            members:
+              type: number
+              range: [3, 100]
+
