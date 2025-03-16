@@ -1,9 +1,12 @@
 import AuthSheet from "@/components/AuthSheet";
+import ChangePhoneNumber from "@/components/ChangePhoneNumber";
+import ChangePinCode from "@/components/ChangePinCode";
 import { Text } from "@/components/ui/Text";
 import { Btn } from "@/components/ui/button";
 import Colors from "@/constants/Colors";
 import { useSession } from "@/context/AuthProviders";
 import { Feather } from "@expo/vector-icons";
+import { router } from "expo-router";
 import React, { useState } from "react";
 import {
   View,
@@ -22,25 +25,22 @@ const links = [
   {
     name: "Transaction History",
     icon: <Feather name="credit-card" size={16} color="#000" />,
-    href: "transaction-history",
+    href: "transactions",
   },
-  {
-    name: "Settings",
-    icon: <Feather name="settings" size={16} color="#000" />,
-    href: "settings",
-  },
+];
+
+[
   {
     name: "Change Phone Number",
     icon: <Feather name="phone" size={16} color="#000" />,
     href: "change-phone-number",
   },
   {
-    name: "Change Pin Number",
+    name: "",
     icon: <Feather name="lock" size={16} color="#000" />,
     href: "change-pin",
   },
 ];
-
 export default function ProfilePage() {
   const { session } = useSession();
   const [isOpen, setIsOpen] = useState(false);
@@ -137,12 +137,14 @@ function ProfileAuthPage() {
             <TouchableOpacity
               key={link.name}
               style={styles.outlineButton}
-              onPress={() => console.log(link.href)}
+              onPress={() => router.push(link.href as any)}
             >
               {link.icon}
               <Text style={styles.buttonText}>{link.name}</Text>
             </TouchableOpacity>
           ))}
+          <ChangePhoneNumber />
+          <ChangePinCode />
         </View>
 
         <TouchableOpacity
