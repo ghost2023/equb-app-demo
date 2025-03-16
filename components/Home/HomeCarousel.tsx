@@ -5,9 +5,46 @@ import { Feather } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
 import { ScrollView, View, useWindowDimensions } from "react-native";
 import { Skeleton } from "../ui/skeleton";
-import { Equb } from "@/lib/types";
-import axios from "axios";
-import { env } from "@/lib/env";
+import { formatDays } from "@/lib/misc";
+
+const fakeData = [
+  {
+    depositAmount: 46,
+    depositFrequency: 25,
+    drawFrequency: 97,
+    id: 0,
+    members: 40,
+    winningAmount: 58,
+    winningFrequency: 44,
+  },
+  {
+    depositAmount: 86,
+    depositFrequency: 97,
+    drawFrequency: 17,
+    id: 39,
+    members: 35,
+    winningAmount: 19,
+    winningFrequency: 37,
+  },
+  {
+    depositAmount: 99,
+    depositFrequency: 52,
+    drawFrequency: 8,
+    id: 32,
+    members: 81,
+    winningAmount: 37,
+    winningFrequency: 66,
+  },
+  {
+    depositAmount: 38,
+    depositFrequency: 59,
+    drawFrequency: 17,
+    id: 68,
+    members: 43,
+    winningAmount: 95,
+    winningFrequency: 79,
+  },
+];
 
 export default function HomeCarousel() {
   const color = Colors["light"];
@@ -16,9 +53,9 @@ export default function HomeCarousel() {
   const equbQuery = useQuery({
     queryKey: ["equb"],
     queryFn: async () => {
-      const res = await axios.get(`${env.EXPO_PUBLIC_API_URL}/api/equbs`);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      return res.data as Equb[];
+      return fakeData;
     },
   });
 
@@ -37,7 +74,7 @@ export default function HomeCarousel() {
       {!equbQuery.isSuccess &&
         new Array(6).fill(0).map((_, index) => (
           <Skeleton
-            key={index}
+            key={index + "222"}
             style={{
               width: width * 0.8,
               height: "100%",
@@ -83,7 +120,7 @@ export default function HomeCarousel() {
                   fontWeight: 500,
                 }}
               >
-                every {equb.winningFrequency}
+                every {formatDays(equb.winningFrequency)}
               </Text>
             </View>
             <View
@@ -135,7 +172,7 @@ export default function HomeCarousel() {
                     fontSize: 12,
                   }}
                 >
-                  {equb.depositFrequency}
+                  {formatDays(equb.depositFrequency)}
                 </Text>
               </View>
             </View>
