@@ -5,6 +5,7 @@ import { router } from "expo-router";
 import { TouchableOpacity, View } from "react-native";
 import { Skeleton } from "./ui/skeleton";
 import { Equb } from "@/lib/types";
+import { formatDays } from "@/lib/misc";
 
 const EqubCard = (props: { equb: Equb }) => {
   const color = Colors.light;
@@ -114,7 +115,7 @@ const EqubCard = (props: { equb: Equb }) => {
                   fontSize: 14,
                 }}
               >
-                {props.equb.winningFrequency}{" "}
+                {formatDays(props.equb.winningFrequency)}
               </Text>
             </View>
             <View
@@ -131,7 +132,7 @@ const EqubCard = (props: { equb: Equb }) => {
                   fontSize: 14,
                 }}
               >
-                {props.equb.depositFrequency}
+                {formatDays(props.equb.depositFrequency)}
               </Text>
             </View>
           </View>
