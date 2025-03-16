@@ -52,7 +52,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       user: {
         first_name: "John",
         last_name: "Doe",
-        phone: "1234567890",
+        phone: "+251912345678",
         date_of_birth: "1990-01-01",
       },
     });
