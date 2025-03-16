@@ -1,38 +1,38 @@
-import React from "react";
+import React, { useMemo, useState } from "react";
 import { Text } from "@/components/ui/Text";
-import { View, ScrollView, TouchableOpacity, StyleSheet } from "react-native";
-import { Feather } from "@expo/vector-icons"; // Icons
+import { View, ScrollView, StyleSheet } from "react-native";
 import { Stack } from "expo-router";
 import Colors from "@/constants/Colors";
 import Progress from "@/components/ui/Progress";
-import { Image } from "expo-image";
+import { Btn } from "@/components/ui/button";
+import { format } from "date-fns";
+import { spacing } from "@/constants/Spacing";
+import { formatDays } from "@/lib/misc";
+import { Feather } from "@expo/vector-icons";
+import Sheet from "@/components/ui/Sheet";
+
+const cycles = [
+  {
+    date: "2022-01-01",
+  },
+  {
+    date: "2022-02-02",
+  },
+  {
+    date: "2022-03-03",
+  },
+  {
+    date: "2022-10-04",
+  },
+  {
+    date: "2022-10-05",
+  },
+];
 
 export default function EquibPage() {
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const snapPoints = useMemo(() => [560], []);
   const color = Colors.light;
-
-  const cycles = [
-    {
-      cycle: 1,
-      status: "Completed",
-      winner: "John Doe",
-      amount: 2000,
-      date: "2023-05-01",
-    },
-    {
-      cycle: 2,
-      status: "Current",
-      winner: "Pending",
-      amount: 2000,
-      date: "2023-06-01",
-    },
-    {
-      cycle: 3,
-      status: "Upcoming",
-      winner: "TBD",
-      amount: 2000,
-      date: "2023-07-01",
-    },
-  ];
 
   return (
     <>
@@ -47,140 +47,191 @@ export default function EquibPage() {
         }}
       />
       <View style={styles.container}>
-        {/* Header */}
-
-        {/* Main Content */}
         <ScrollView style={styles.content}>
-          {/* Card 1 */}
-          <View style={styles.card}>
-            <View style={{ flexDirection: "row", gap: 12, marginBottom: 8 }}>
-              <Image
-                source={"https://picsum.photos/100"}
-                style={{ width: 56, height: 56, borderRadius: 8 }}
-              />
-              <Text style={styles.cardTitle}>Family Savings Equib</Text>
-            </View>
-            <Text style={styles.cardText}>
-              A group savings plan for our extended family to help with big
-              expenses and emergencies.
+          <View style={{ paddingVertical: 12, alignItems: "center" }}>
+            <Text style={{ fontWeight: 600, fontSize: 14 }}>Winning</Text>
+            <Text
+              style={{
+                color: Colors.light.primary,
+                fontSize: 32,
+                fontWeight: 600,
+              }}
+            >
+              {(20000).toLocaleString("en", {
+                style: "currency",
+                currency: "ETB",
+              })}
             </Text>
-            <View style={[styles.row, { marginTop: 12 }]}>
-              <Feather
-                name="users"
-                size={16}
-                color="#6b7280"
-                style={styles.icon}
-              />
-              <Text style={styles.rowText}>12 members</Text>
+          </View>
+          <View
+            style={[
+              styles.card,
+              { paddingVertical: 8, gap: 8, marginBottom: 16 },
+            ]}
+          >
+            <View style={styles.detailsRow}>
+              <View style={styles.detailsRowLabel}>
+                <Feather name="download" size={16} />
+                <Text style={styles.detailsRowLabelText}>Deposit amount</Text>
+              </View>
+              <Text style={styles.detailsRowValue}>ETB 2,000</Text>
+            </View>
+            <View style={styles.detailsRow}>
+              <View style={styles.detailsRowLabel}>
+                <Feather name="clock" size={16} />
+                <Text style={styles.detailsRowLabelText}>
+                  Deposit frequency
+                </Text>
+              </View>
+              <Text style={styles.detailsRowValue}>{formatDays(20)}</Text>
+            </View>
+            <View style={styles.detailsRow}>
+              <View style={styles.detailsRowLabel}>
+                <Feather name="users" size={16} />
+                <Text style={styles.detailsRowLabelText}>Members</Text>
+              </View>
+              <Text style={styles.detailsRowValue}>20</Text>
             </View>
           </View>
+          <View style={styles.card}>
+            <Text
+              style={{
+                color: color.secondaryText,
+                fontSize: 14,
+                fontWeight: 500,
+              }}
+            >
+              Progress
+            </Text>
 
+            <View
+              style={{
+                marginTop: 8,
+                marginBottom: 4,
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "flex-end",
+              }}
+            >
+              <Text style={{ fontWeight: 500, color: color.secondaryText }}>
+                <Text
+                  style={{ fontWeight: 600, color: color.text, fontSize: 18 }}
+                >
+                  6
+                </Text>{" "}
+                / 12 Cycles
+              </Text>
+
+              <Text style={{ fontWeight: 500, color: color.secondaryText }}>
+                4 Months left
+              </Text>
+            </View>
+            <Progress value={0.6} containerStyle={{ marginBottom: 4 }} />
+          </View>
           <Text style={styles.sectionTitle}>Current Cycle</Text>
           <View style={styles.card}>
-            <Text style={styles.cardText}>Total Contributed</Text>
-            <Text style={styles.amountText}>$1,2600</Text>
-            <Progress value={0.6} containerStyle={{ marginBottom: 4 }} />
-            <View
-              style={{ flexDirection: "row", justifyContent: "space-between" }}
+            <Text
+              style={{
+                color: color.secondaryText,
+                fontSize: 14,
+                fontWeight: 500,
+              }}
             >
-              <Text style={styles.cardText}>60% of target</Text>
+              Due Date
+            </Text>
+
+            <View
+              style={{
+                marginBottom: 12,
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "flex-end",
+              }}
+            >
+              <Text
+                style={{ fontWeight: 500, color: color.text, fontSize: 18 }}
+              >
+                In 3 Days
+              </Text>
+            </View>
+            <Btn label="Deposit" />
+          </View>
+          <Text style={styles.sectionTitle}>Previous Cycles</Text>
+          {cycles.map((cycle, index) => (
+            <View key={index} style={[styles.card, { paddingVertical: 6 }]}>
               <View
                 style={{
-                  flexDirection: "row",
+                  alignItems: "flex-start",
+                  marginVertical: 6,
                   gap: 4,
-                  marginTop: 2,
                 }}
               >
                 <Text
                   style={{
                     color: color.secondaryText,
-                    fontWeight: 500,
+                    fontWeight: "500",
                     fontSize: 14,
-                    flexShrink: 0,
                   }}
                 >
-                  <Text
-                    style={{
-                      fontWeight: 600,
-                      color: color.tint,
-                    }}
-                  >
-                    {4}{" "}
-                  </Text>
-                  /{10} cycles
+                  Deposited on
                 </Text>
-              </View>
-            </View>
-          </View>
-
-          {/* Lottery Cycles */}
-          <Text style={styles.sectionTitle}>Previous Cycles</Text>
-          {cycles.toReversed().map((cycle, index) => (
-            <View key={index} style={styles.card}>
-              <View style={styles.rowBetween}>
-                <Text style={{ fontWeight: 500, color: color.secondaryText }}>
-                  Winner
-                </Text>
-                <Text>{cycle.cycle}</Text>
-              </View>
-
-              <View
-                style={[
-                  styles.row,
-                  {
-                    alignItems: "flex-start",
-                    marginVertical: 6,
-                    gap: 10,
-                  },
-                ]}
-              >
-                <Image
-                  source={"https://picsum.photos/200"}
-                  style={{
-                    width: 36,
-                    height: 36,
-                    borderRadius: 6,
-                  }}
-                />
                 <Text
-                  style={{ color: "black", fontWeight: "600", fontSize: 16 }}
+                  style={{ color: "black", fontWeight: "500", fontSize: 16 }}
                 >
-                  {cycle.winner}
+                  {format(new Date(cycle.date), "MMM dd")}
                 </Text>
-              </View>
-              <View style={styles.detailsRow}>
-                <View style={styles.row}>
-                  <Feather
-                    name="calendar"
-                    size={16}
-                    color="#6b7280"
-                    style={styles.icon}
-                  />
-                  <Text style={styles.rowText}>{cycle.date}</Text>
-                </View>
-                <View style={[styles.row, styles.rightAligned]}>
-                  <Feather
-                    name="dollar-sign"
-                    size={16}
-                    color="#6b7280"
-                    style={styles.icon}
-                  />
-                  <Text style={styles.rowText}>{cycle.amount}</Text>
-                </View>
               </View>
             </View>
           ))}
         </ScrollView>
 
-        <TouchableOpacity style={styles.button}>
-          <Feather
-            name="plus-circle"
-            size={18}
-            color="white"
-            style={styles.icon}
-          />
-          <Text style={styles.buttonText}>Deposit</Text>
-        </TouchableOpacity>
+        <Btn
+          label="Join"
+          style={{ margin: spacing.sm }}
+          onPressIn={() => setSheetOpen(true)}
+        />
+        {sheetOpen && (
+          <Sheet
+            backgroundStyle={{ backgroundColor: "#fff" }}
+            snapPoints={snapPoints}
+            enableDynamicSizing
+            onClose={() => setSheetOpen(false)}
+          >
+            <View style={{ padding: spacing.sm, paddingTop: 0 }}>
+              <Text style={{ fontSize: 20, fontWeight: "600" }}>
+                Terms and Conditions
+              </Text>
+              <Text
+                style={{
+                  fontSize: 12,
+                  marginVertical: 12,
+                  lineHeight: 20,
+                  fontWeight: 500,
+                  color: Colors.light.secondaryText,
+                }}
+              >
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
+                eget lacus in libero posuere ultrices. Sed eget lacus in libero
+                posuere ultrices. Sed eget lacus in libero posuere ultrices. Sed
+                eget lacus in libero posuere ultrices. Sed eget lacus in libero
+                posuere ultrices. Sed eget lacus in libero posuere ultrices. Sed
+                eget lacus in libero posuere ultrices. Sed eget lacus in libero
+                posuere ultrices. Sed eget lacus in libero posuere ultrices. Sed
+                eget lacus in libero posuere ultrices. Sed eget lacus in libero
+                posuere ultrices. Sed eget lacus in libero posuere ultrices. Sed
+                eget lacus in libero posuere ultrices. Sed eget lacus in libero
+                posuere ultrices. Sed eget lacus{" "}
+              </Text>
+              <View>
+                <Btn
+                  label="Accept"
+                  style={{ marginTop: 24 }}
+                  onPressIn={() => setSheetOpen(false)}
+                />
+              </View>
+            </View>
+          </Sheet>
+        )}
       </View>
     </>
   );
@@ -195,16 +246,34 @@ const styles = StyleSheet.create({
     padding: 12,
     marginBottom: 10,
     elevation: 2,
+    boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.15)",
   },
-  cardTitle: { fontSize: 16, fontWeight: "bold", marginBottom: 8 },
-  cardText: { color: "#6b7280", fontSize: 14 },
-  amountText: { fontSize: 18, fontWeight: "bold", marginVertical: 8 },
+  detailsRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  detailsRowLabel: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+  },
+  detailsRowLabelText: {
+    fontSize: 14,
+    fontWeight: 500,
+    color: Colors.light.secondaryText,
+  },
+  detailsRowValue: {
+    fontSize: 16,
+    color: "black",
+    fontWeight: 600,
+  },
   progressBar: { height: 8, borderRadius: 4 },
   sectionTitle: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: "bold",
     marginBottom: 10,
-    marginTop: 12,
+    marginTop: 8,
   },
   row: { flexDirection: "row", alignItems: "center" },
   rowBetween: {
@@ -214,11 +283,6 @@ const styles = StyleSheet.create({
   },
   icon: { marginRight: 6 },
   rowText: { color: "#6b7280", fontSize: 14 },
-  detailsRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 8,
-  },
   rightAligned: { justifyContent: "flex-end" },
   statusBadge: { padding: 4, borderRadius: 50 },
   completed: { backgroundColor: "#e8f5e9" },
