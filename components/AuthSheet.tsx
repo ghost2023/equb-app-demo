@@ -1,5 +1,6 @@
 import {
   Dimensions,
+  Keyboard,
   TouchableOpacity,
   View,
   useWindowDimensions,
@@ -8,15 +9,16 @@ import PhoneInput from "react-native-phone-number-input";
 import Sheet from "./ui/Sheet";
 import { Text } from "./ui/Text";
 import { Btn } from "./ui/button";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { spacing } from "@/constants/Spacing";
 import Colors from "@/constants/Colors";
 import Animated, { useSharedValue, withSpring } from "react-native-reanimated";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "@/lib/toastStore";
 import BottomSheet from "@gorhom/bottom-sheet";
-import { OtpInput } from "react-native-otp-entry";
+import { OtpInput, OtpInputRef } from "react-native-otp-entry";
 import { router } from "expo-router";
+import { useSession } from "@/context/AuthProviders";
 
 type Props = {
   onClose?: () => void;
@@ -25,37 +27,59 @@ type Props = {
 };
 
 const AuthSheet = (props: Props) => {
+  const auth = useSession();
+  const [page, setPage] = useState(0);
+  const [otpCode, setOtpCode] = useState("");
   const [phoneNumber, setPhoneNumber] = useState<string>();
   const snapPoints = useMemo(() => [240, 320], []);
 
   const bottomSheetRef = useRef<BottomSheet>(null);
   const translateX = useSharedValue(0);
-  const setPage = (val: number) => {
-    translateX.value = withSpring(val * Dimensions.get("window").width * -1, {
+
+  useEffect(() => {
+    translateX.value = withSpring(page * Dimensions.get("window").width * -1, {
       damping: 10,
       stiffness: 100,
       mass: 1,
       overshootClamping: true,
     });
-    bottomSheetRef.current?.snapToIndex(val, {
+    if (Keyboard.isVisible() && page === 0) {
+      Keyboard.dismiss();
+    }
+
+    bottomSheetRef.current?.snapToIndex(page, {
       damping: 10,
       stiffness: 100,
       mass: 1,
       overshootClamping: true,
     });
-  };
+  }, [page]);
+
+  useEffect(() => {
+    if (props.isOpen) {
+      setPage(0);
+      setOtpCode("");
+    }
+  }, [props.isOpen]);
 
   const mutation = useMutation({
-    async mutationFn(terms: string) {
-      console.log({ terms, phoneNumber });
+    async mutationFn(otpCode: string) {
       await new Promise((resolve) => setTimeout(resolve, 1000));
+      if (otpCode !== "000000") throw new Error("Invalid OTP");
+      return { phoneNumber };
     },
-    onSuccess: () => {
+    async onSuccess(data) {
       toast("Welcome", "success");
       bottomSheetRef.current?.close();
       props.onClose?.();
-      router.push("/onboarding");
+      if (data.phoneNumber == "+251912345678") await auth.login();
+      else router.push("/onboarding");
       setPage(0);
+
+      setOtpCode("");
+    },
+    onError() {
+      toast("Invalid OTP", "error");
     },
   });
 
@@ -79,12 +103,16 @@ const AuthSheet = (props: Props) => {
             setPage(1);
             return setPhoneNumber(data);
           }}
+          page={page}
         />
         <Step2
           setPage={setPage}
           onSave={mutation.mutate}
           phoneNumber={phoneNumber ?? ""}
           isSubmitting={mutation.isPending}
+          otpCode={otpCode}
+          setOtpCode={setOtpCode}
+          page={page}
         />
       </Animated.View>
     </Sheet>
@@ -92,6 +120,7 @@ const AuthSheet = (props: Props) => {
 };
 
 type StepProps = {
+  page: number;
   onSave: (data: string) => void;
 };
 
@@ -112,6 +141,11 @@ function Step1(props: StepProps) {
       props.onSave(phoneNumber);
     },
   });
+
+  useEffect(() => {
+    // if (props.page === 0) phoneNumberRef.current?.();
+  }, [props.page]);
+
   const width = useWindowDimensions().width;
   return (
     <View
@@ -135,7 +169,7 @@ function Step1(props: StepProps) {
       <View style={{ gap: spacing.xs, flex: 1 }}>
         <PhoneInput
           value={phoneNumber}
-          onChangeText={(val) => setPhoneNumber(val)}
+          onChangeFormattedText={(val) => setPhoneNumber(val)}
           placeholder="Enter your phone number"
           autoFocus={true}
           textInputStyle={{
@@ -181,13 +215,22 @@ function Step1(props: StepProps) {
 }
 
 function Step2(props: {
+  page: number;
   setPage: (val: number) => void;
-  onSave: (val: string) => void;
+  onSave: (otp: string) => void;
+  otpCode: string;
+  setOtpCode: (val: string) => void;
   phoneNumber: string;
   isSubmitting: boolean;
 }) {
-  const [otpCode, setOtpCode] = useState("");
+  const otpInputRef = useRef<OtpInputRef>(null);
   const width = useWindowDimensions().width;
+
+  useEffect(() => {
+    otpInputRef.current?.setValue(props.otpCode);
+    if (props.page === 1) otpInputRef.current?.focus();
+  }, [props.page]);
+
   return (
     <View style={{ padding: spacing.sm, paddingTop: 0, width }}>
       <Text style={{ fontSize: 24, fontWeight: "600", marginBottom: 16 }}>
@@ -212,6 +255,8 @@ function Step2(props: {
       <View style={{ gap: spacing.xs }}>
         <OtpInput
           numberOfDigits={6}
+          ref={otpInputRef}
+          autoFocus={false}
           theme={{
             containerStyle: {
               gap: 8,
@@ -231,8 +276,11 @@ function Step2(props: {
               fontSize: 22,
             },
           }}
-          onTextChange={(text) => setOtpCode(text)}
-          onFilled={() => props.onSave(otpCode)}
+          onTextChange={props.setOtpCode}
+          onFilled={(text) => {
+            props.setOtpCode(text);
+            return props.onSave(text);
+          }}
         />
 
         <View
@@ -243,7 +291,11 @@ function Step2(props: {
         >
           <Btn
             label="Verify"
-            onPressOut={() => props.onSave(otpCode)}
+            onPressOut={() => {
+              if (props.otpCode.length !== 6)
+                return toast("Please enter a valid OTP", "error");
+              return props.onSave(props.otpCode);
+            }}
             isLoading={props.isSubmitting}
           />
 
