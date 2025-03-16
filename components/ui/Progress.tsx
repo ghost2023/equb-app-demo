@@ -23,11 +23,7 @@ const Progress = (props: Props) => {
         props.containerStyle,
       ]}
     >
-      <LinearGradient
-        colors={["#7f82Fe", "#5f62Fe", "#2f42ee"]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        locations={[0.1, 0.6, 1]}
+      <View
         style={[
           {
             width: `${props.value * 100}%`,
