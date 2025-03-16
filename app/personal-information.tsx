@@ -4,7 +4,7 @@ import Colors from "@/constants/Colors";
 import { spacing } from "@/constants/Spacing";
 import { Feather } from "@expo/vector-icons";
 import { format } from "date-fns";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import {
   Linking,
   ScrollView,
@@ -102,20 +102,32 @@ const OnboardingData = () => {
         <TouchableOpacity
           style={{
             padding: 12,
-            backgroundColor: Colors.light.primary,
+            borderColor: Colors.light.border,
+            borderWidth: 1,
             borderRadius: 6,
             alignItems: "center",
             marginTop: "auto",
             gap: 12,
             flexDirection: "row",
+            marginBottom: spacing.sm,
           }}
           onPress={() => Linking.openURL("https://www.google.com")}
         >
-          <Feather name="download" size={20} color="#FFF" />
-          <Text style={{ color: "white", fontWeight: "600" }}>
+          <Feather
+            name="download"
+            size={20}
+            color={Colors.light.secondaryText}
+          />
+          <Text
+            style={{ color: Colors.light.secondaryText, fontWeight: "600" }}
+          >
             Download verification document
           </Text>
         </TouchableOpacity>
+        <Btn
+          onPress={() => router.push("/profile-edit")}
+          label="Update Profile"
+        />
       </ScrollView>
     </View>
   );
