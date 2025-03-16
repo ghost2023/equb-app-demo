@@ -125,7 +125,7 @@ const OnboardingData = () => {
           </Text>
         </TouchableOpacity>
         <Btn
-          onPress={() => router.push("/profile-edit")}
+          onPress={() => router.push("/edit-personal")}
           label="Update Profile"
         />
       </ScrollView>

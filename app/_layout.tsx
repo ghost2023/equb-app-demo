@@ -1,9 +1,13 @@
+import { Text } from "@/components/ui/Text";
+import Colors from "@/constants/Colors";
 import { Providers } from "@/context/providers";
+import { Feather } from "@expo/vector-icons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
+import { View } from "react-native";
 import "react-native-reanimated";
 
 export {
@@ -58,6 +62,47 @@ function RootLayoutNav() {
         name="onboarding"
         options={{
           title: "Onboarding",
+          headerShadowVisible: false,
+          headerStyle: {
+            backgroundColor: "white",
+          },
+          headerTitleStyle: {
+            fontFamily: "semiBold",
+          },
+        }}
+      />
+
+      <Stack.Screen
+        name="transactions"
+        options={{
+          title: "Transactions History",
+          headerShadowVisible: false,
+          headerStyle: {
+            backgroundColor: Colors.light.background,
+          },
+          headerTitleStyle: {
+            fontFamily: "semiBold",
+          },
+        }}
+      />
+      <Stack.Screen
+        name="personal-information"
+        options={{
+          title: "Personal Information",
+          headerShadowVisible: false,
+          headerStyle: {
+            backgroundColor: "white",
+          },
+          headerTitleStyle: {
+            fontFamily: "semiBold",
+          },
+        }}
+      />
+
+      <Stack.Screen
+        name="edit-personal"
+        options={{
+          title: "Edit Personal Information",
           headerShadowVisible: false,
           headerStyle: {
             backgroundColor: "white",
